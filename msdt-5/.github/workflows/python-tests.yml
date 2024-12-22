@@ -28,4 +28,4 @@ jobs:
 
     - name: Run tests
       run: |
-        pytest LR5test.py
+        pytest LR5_test.py
