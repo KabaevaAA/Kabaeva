@@ -101,28 +101,33 @@ class TennisGameDefactored2:
 
 
 class TennisGameDefactored3:
+    """Класс для игры в теннис с улучшенной логикой счета."""
+
     def __init__(self, player1Name, player2Name):
+        """Инициализация игры с двумя игроками."""
         self.p1N = player1Name
         self.p2N = player2Name
         self.p1 = 0
         self.p2 = 0
 
     def won_point(self, n):
+        """Увеличивает очки для указанного игрока."""
         if n == self.p1N:
             self.p1 += 1
         else:
             self.p2 += 1
 
     def score(self):
-        if (self.p1 < 4 and self.p2 < 4):
-            p = ["Love", "Fifteen", "Thirty", "Forty"]
-            s = p[self.p1]
-            return s + "-All" if (self.p1 == self.p2) else s + "-" + p[self.p2]
-        else:
-            if (self.p1 == self.p2):
-                return "Deuce"
-            s = self.p1N if self.p1 > self.p2 else self.p2N
-            return "Advantage " + s if ((self.p1 - self.p2) * (self.p1 - self.p2) == 1) else "Win for " + s
+        """Возвращает текущий счет игры."""
+        if self.p1 < 4 and self.p2 < 4:
+            score_map = ["Love", "Fifteen", "Thirty", "Forty"]
+            return (score_map[self.p1] + "-All" if self.p1 == self.p2
+                    else score_map[self.p1] + "-" + score_map[self.p2])
+        elif self.p1 == self.p2:
+            return "Deuce"
+
+        winner = self.p1N if self.p1 > self.p2 else self.p2N
+        return "Advantage " + winner if abs(self.p1 - self.p2) == 1 else "Win for " + winner
 
 
 # NOTE: You must change this to point at the one of the three examples that you're working on!
