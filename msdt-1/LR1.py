@@ -8,7 +8,7 @@ class TennisGameDefactored1:
         self.p1points = 0
         self.p2points = 0
 
-    def wonpoint(self, playerName):
+    def won_point(self, playerName):
         if playerName == self.player1Name:
             self.p1points += 1
         else:
@@ -31,12 +31,12 @@ class TennisGameDefactored1:
         return self.get_score()
 
     def determine_winner(self):
-        minusResult = self.p1points - self.p2points
-        if minusResult == 1:
+        minus_result = self.p1points - self.p2points
+        if minus_result == 1:
             return "Advantage " + self.player1Name
-        elif minusResult == -1:
+        elif minus_result == -1:
             return "Advantage " + self.player2Name
-        elif minusResult >= 2:
+        elif minus_result >= 2:
             return "Win for " + self.player1Name
         else:
             return "Win for " + self.player2Name
@@ -54,7 +54,7 @@ class TennisGameDefactored2:
         self.p1points = 0
         self.p2points = 0
 
-    def wonpoint(self, playerName):
+    def won_point(self, playerName):
         if playerName == self.player1Name:
             self.P1Score()
         else:
@@ -153,7 +153,7 @@ class TennisGameDefactored3:
         self.p1 = 0
         self.p2 = 0
 
-    def wonpoint(self, n):
+    def won_point(self, n):
         if n == self.p1N:
             self.p1 += 1
         else:
