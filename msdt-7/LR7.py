@@ -1,75 +1,44 @@
-import numpy as np
-import sympy as sp
+import asyncio
+import random
 
 
-def matrix_operations(A, B):
-    """Выполняет сложные операции с матрицами: сложение, вычитание, умножение и транспонирование."""
-    A = np.array(A)
-    B = np.array(B)
-
-    addition = A + B
-    subtraction = A - B
-    multiplication = A @ B  # Матрица A умноженная на матрицу B
-    transpose_A = A.T
-    transpose_B = B.T
-
-    return {
-        "Сложение": addition,
-        "Вычитание": subtraction,
-        "Умножение": multiplication,
-        "Транспонирование A": transpose_A,
-        "Транспонирование B": transpose_B
-    }
+async def fetch_data(source_id):
+    """Имитирует асинхронное получение данных из источника."""
+    print(f"Запрос данных из источника {source_id}...")
+    # Имитируем задержку на получение данных
+    await asyncio.sleep(random.uniform(1, 3))
+    data = f"Данные из источника {source_id}"
+    print(f"Получены данные из источника {source_id}: {data}")
+    return data
 
 
-def calculate_integral(func, var, lower_limit, upper_limit):
-    """Вычисляет определенный интеграл функции func по переменной var от lower_limit до upper_limit."""
-    integral = sp.integrate(func, (var, lower_limit, upper_limit))
-    return integral
+async def process_data(data):
+    """Имитирует асинхронную обработку данных."""
+    print(f"Обработка данных: {data}...")
+    # Имитируем задержку на обработку данных
+    await asyncio.sleep(random.uniform(1, 2))
+    processed_data = f"Обработанные {data}"
+    print(f"Завершена обработка данных: {processed_data}")
+    return processed_data
 
 
-def calculate_derivative(func, var):
-    """Вычисляет производную функции func по переменной var."""
-    derivative = sp.diff(func, var)
-    return derivative
+async def main():
+    """Основная функция приложения."""
+    sources = [1, 2, 3, 4, 5]  # Идентификаторы источников данных
+    fetch_tasks = [fetch_data(source) for source in sources]
+
+    # Получаем данные из всех источников асинхронно
+    raw_data_list = await asyncio.gather(*fetch_tasks)
+
+    # Обрабатываем полученные данные асинхронно
+    process_tasks = [process_data(data) for data in raw_data_list]
+    processed_data_list = await asyncio.gather(*process_tasks)
+
+    print("Все данные обработаны:")
+    for processed_data in processed_data_list:
+        print(processed_data)
 
 
-def complex_number_operations(z1, z2):
-    """Выполняет операции с комплексными числами: сложение, вычитание, умножение и деление."""
-    z1 = complex(z1)
-    z2 = complex(z2)
-
-    addition = z1 + z2
-    subtraction = z1 - z2
-    multiplication = z1 * z2
-    division = z1 / z2 if z2 != 0 else "Деление на ноль невозможно"
-
-    return {
-        "Сложение": addition,
-        "Вычитание": subtraction,
-        "Умножение": multiplication,
-        "Деление": division
-    }
-
-
-# Примеры использования функций
+# Запуск основного приложения
 if __name__ == "__main__":
-    # Пример операций с матрицами
-    A = [[1, 2], [3, 4]]
-    B = [[5, 6], [7, 8]]
-    print("Операции с матрицами:", matrix_operations(A, B))
-
-    # Пример вычисления интеграла
-    x = sp.symbols('x')
-    func = sp.sin(x)
-    integral_result = calculate_integral(func, x, 0, sp.pi)
-    print("Определенный интеграл sin(x) от 0 до π:", integral_result)
-
-    # Пример вычисления производной
-    derivative_result = calculate_derivative(func, x)
-    print("Производная sin(x):", derivative_result)
-
-    # Пример операций с комплексными числами
-    z1 = 2 + 3j
-    z2 = 1 - 1j
-    print("Операции с комплексными числами:", complex_number_operations(z1, z2))
+    asyncio.run(main())
