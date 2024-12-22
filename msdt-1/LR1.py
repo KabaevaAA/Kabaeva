@@ -1,215 +1,178 @@
-import random
-import time
+#-*-coding:utf-8-*-
 
-class Character:
-    def __init__(self, name, hp, attack):
-        self.name = name
-        self.hp = hp
-        self.attack = attack
+classTennisGameDefactored1:
 
-    def is_alive(self):
-        return self.hp > 0
+def__init__(self,player1Name,player2Name):
+self.player1Name=player1Name
+self.player2Name=player2Name
+self.p1points=0
+self.p2points=0
 
-    def take_damage(self, dmg):
-        self.hp -= dmg
-        if self.hp < 0:
-            self.hp = 0
+defwon_point(self,playerName):
+ifplayerName==self.player1Name:
+self.p1points+=1
+else:
+self.p2points+=1
 
-    def heal(self, amount):
-        self.hp += amount
-        if self.hp > 100:
-            self.hp = 100
-
-    def __str__(self):
-        return f"{self.name} (HP: {self.hp})"
-
-
-class Player(Character):
-    def __init__(self, name):
-        super().__init__(name, 100, 10)
-        self.inventory = []
-        self.level = 1
-        self.experience = 0
-
-    def add_item(self, item):
-        self.inventory.append(item)
-
-    def show_inventory(self):
-        if len(self.inventory) == 0:
-            print("Inventory is empty.")
-        else:
-            print("Inventory:")
-            for item in self.inventory:
-                print(f"- {item}")
-
-
-class Monster(Character):
-    def __init__(self, name, hp, attack):
-        super().__init__(name, hp, attack)
-
-
-class Item:
-    def __init__(self, name, heal_amount):
-        self.name = name
-        self.heal_amount = heal_amount
-
-    def __str__(self):
-        return f"{self.name} (Heals: {self.heal_amount})"
+defscore(self):
+result=""
+tempScore=0
+if(self.p1points==self.p2points):
+result={
+0:"Love-All",
+1:"Fifteen-All",
+2:"Thirty-All",
+3:"Forty-All",
+}.get(self.p1points,"Deuce")
+elif(self.p1points>=4orself.p2points>=4):
+minusResult=self.p1points-self.p2points
+if(minusResult==1):
+result="Advantage"+self.player1Name
+elif(minusResult==-1):
+result="Advantage"+self.player2Name
+elif(minusResult>=2):
+result="Winfor"+self.player1Name
+else:
+result="Winfor"+self.player2Name
+else:
+foriinrange(1,3):
+if(i==1):
+tempScore=self.p1points
+else:
+result+="-"
+tempScore=self.p2points
+result+={
+0:"Love",
+1:"Fifteen",
+2:"Thirty",
+3:"Forty",
+}[tempScore]
+returnresult
 
 
-def create_monster():
-    monsters = ["Goblin", "Orc", "Troll", "Skeleton", "Zombie"]
-    name = random.choice(monsters)
-    hp = random.randint(20, 50)
-    attack = random.randint(5, 15)
-    return Monster(name, hp, attack)
+classTennisGameDefactored2:
+def__init__(self,player1Name,player2Name):
+self.player1Name=player1Name
+self.player2Name=player2Name
+self.p1points=0
+self.p2points=0
 
-def battle(player, monster):
-    print(f"A wild {monster.name} appears!")
-    while player.is_alive() and monster.is_alive():
-        action = input("Do you want to (a)ttack or (r)un? ")
-        if action == "a":
-            monster.take_damage(player.attack)
-            print(f"You attacked {monster.name} for {player.attack} damage!")
-            if monster.is_alive():
-                player.take_damage(monster.attack)
-                print(f"{monster.name} attacked you for {monster.attack} damage!")
-        elif action == "r":
-            print("You ran away!")
-            break
-        else:
-            print("Invalid action!")
-    if not monster.is_alive():
-        print(f"You defeated {monster.name}!")
-        loot = random.choice([Item("Health Potion", 20), None])
-        if loot:
-            player.add_item(loot)
-            print(f"You found a {loot.name}!")
+defwon_point(self,playerName):
+ifplayerName==self.player1Name:
+self.P1Score()
+else:
+self.P2Score()
 
+defscore(self):
+result=""
+if(self.p1points==self.p2pointsandself.p1points<4):
+if(self.p1points==0):
+result="Love"
+if(self.p1points==1):
+result="Fifteen"
+if(self.p1points==2):
+result="Thirty"
+if(self.p1points==3):
+result="Forty"
+result+="-All"
+if(self.p1points==self.p2pointsandself.p1points>3):
+result="Deuce"
 
+P1res=""
+P2res=""
+if(self.p1points>0andself.p2points==0):
+if(self.p1points==1):
+P1res="Fifteen"
+if(self.p1points==2):
+P1res="Thirty"
+if(self.p1points==3):
+P1res="Forty"
 
-def explore(player):
-    """Explore the dungeon and encounter monsters or items."""
-    print("You are exploring the dungeon...")
-    while player.is_alive():
-        encounter = random.choice(["monster", "item", "nothing"])
-        if encounter == "monster":
-            monster = create_monster()
-            battle(player, monster)
-        elif encounter == "item":
-            item = Item("Health Potion", 20)
-            print(f"You found a {item.name}!")
-            take_item = input("Do you want to take it? (y/n) ")
-            if take_item == "y":
-                player.add_item(item)
-        else:
-            print("You found nothing.")
+P2res="Love"
+result=P1res+"-"+P2res
+if(self.p2points>0andself.p1points==0):
+if(self.p2points==1):
+P2res="Fifteen"
+if(self.p2points==2):
+P2res="Thirty"
+if(self.p2points==3):
+P2res="Forty"
 
-def main():
-    """Main function to start the game."""
-    print("Welcome to the Dungeon Explorer!")
-    player_name = input("Enter your character's name: ")
-    player = Player(player_name)
-    while player.is_alive():
-        action = input("Do you want to (e)xplore or (i)nventory? ")
-        if action == "e":
-            explore(player)
-        elif action == "i":
-            player.show_inventory()
-        else:
-            print("Invalid action!")
-    print("Game Over!")
+P1res="Love"
+result=P1res+"-"+P2res
 
 
+if(self.p1points>self.p2pointsandself.p1points<4):
+if(self.p1points==2):
+P1res="Thirty"
+if(self.p1points==3):
+P1res="Forty"
+if(self.p2points==1):
+P2res="Fifteen"
+if(self.p2points==2):
+P2res="Thirty"
+result=P1res+"-"+P2res
+if(self.p2points>self.p1pointsandself.p2points<4):
+if(self.p2points==2):
+P2res="Thirty"
+if(self.p2points==3):
+P2res="Forty"
+if(self.p1points==1):
+P1res="Fifteen"
+if(self.p1points==2):
+P1res="Thirty"
+result=P1res+"-"+P2res
 
-# Дальнейшее расширение кода
-class CustomMonster(Monster):
-    def __init__(self, name, hp, attack):
-        super().__init__(name, hp, attack)
-        self.special_attack = random.randint(5, 20)
+if(self.p1points>self.p2pointsandself.p2points>=3):
+result="Advantage"+self.player1Name
 
-    def use_special(self, player):
-        print(f"{self.name} uses a special attack!")
-        player.take_damage(self.special_attack)
+if(self.p2points>self.p1pointsandself.p1points>=3):
+result="Advantage"+self.player2Name
 
+if(self.p1points>=4andself.p2points>=0and(self.p1points-self.p2points)>=2):
+result="Winfor"+self.player1Name
+if(self.p2points>=4andself.p1points>=0and(self.p2points-self.p1points)>=2):
+result="Winfor"+self.player2Name
+returnresult
 
-def create_custom_monster():
-    names = ["Dragon", "Vampire", "Werewolf", "Giant"]
-    name = random.choice(names)
-    hp = random.randint(50, 100)
-    attack = random.randint(10, 25)
-    return CustomMonster(name, hp, attack)
+defSetP1Score(self,number):
+foriinrange(number):
+self.P1Score()
 
+defSetP2Score(self,number):
+foriinrange(number):
+self.P2Score()
 
-def battle_with_custom(player, monster):
-    print(f"A wild {monster.name} appears!")
-    while player.is_alive() and monster.is_alive():
-        action = input("Do you want to (a)ttack, (r)un, or (s)pecial? ")
-        if action == "a":
-            monster.take_damage(player.attack)
-            print(f"You attacked {monster.name} for {player.attack} damage!")
-            if monster.is_alive():
-                player.take_damage(monster.attack)
-                print(f"{monster.name} attacked you for {monster.attack} damage!")
-        elif action == "r":
-            print("You ran away!")
-            break
-        elif action == "s":
-            player.attack += 5
-            print("You powered up your attack!")
-        else:
-            print("Invalid action!")
-    if not monster.is_alive():
-        print(f"You defeated {monster.name}!")
-        loot = random.choice([Item("Health Potion", 20), None])
-        if loot:
-            player.add_item(loot)
-            print(f"You found a {loot.name}!")
-
-
-# Добавление новых функций для улучшения игры
-def save_game(player):
-    """Save the player's game state to a file."""
-    with open(f"{player.name}_save.txt", "w") as f:
-        f.write(f"{player.name}\n{player.hp}\n{player.level}\n{player.experience}\n")
-        for item in player.inventory:
-            f.write(f"{item.name}\n")
-
-def load_game():
-    """Load the player's game state from a file."""
-    name = input("Enter your character's name to load: ")
-    try:
-        with open(f"{name}_save.txt", "r") as f:
-            player_name = f.readline().strip()
-            hp = int(f.readline().strip())
-            level = int(f.readline().strip())
-            experience = int(f.readline().strip())
-            player = Player(player_name)
-            player.hp = hp
-            player.level = level
-            player.experience = experience
-            items = f.readlines()
-            for item_name in items:
-                player.add_item(Item(item_name.strip(), 20))
-            print("Game loaded successfully!")
-            return player
-    except FileNotFoundError:
-        print("Save file not found.")
-        return None
+defP1Score(self):
+self.p1points+=1
 
 
+defP2Score(self):
+self.p2points+=1
 
-def main_menu():
-    """Display the main menu and handle user choice."""
-    print("1. New Game")
-    print("2. Load Game")
-    choice = input("Choose an option: ")
-    if choice == "1":
-        main()
-    elif choice == "2":
-        player = load_game()
-        if player:
-            explore(player)
+classTennisGameDefactored3:
+def__init__(self,player1Name,player2Name):
+self.p1N=player1Name
+self.p2N=player2Name
+self.p1=0
+self.p2=0
 
-if __name__ == "__main__":
-    main_menu()
+defwon_point(self,n):
+ifn==self.p1N:
+self.p1+=1
+else:
+self.p2+=1
+
+defscore(self):
+if(self.p1<4andself.p2<4):
+p=["Love","Fifteen","Thirty","Forty"]
+s=p[self.p1]
+returns+"-All"if(self.p1==self.p2)elses+"-"+p[self.p2]
+else:
+if(self.p1==self.p2):
+return"Deuce"
+s=self.p1Nifself.p1>self.p2elseself.p2N
+return"Advantage"+sif((self.p1-self.p2)*(self.p1-self.p2)==1)else"Winfor"+s
+
+#NOTE:Youmustchangethistopointattheoneofthethreeexamplesthatyou'reworkingon!
+TennisGame=TennisGameDefactored1
